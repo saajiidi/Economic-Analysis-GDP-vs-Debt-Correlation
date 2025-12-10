@@ -347,15 +347,12 @@ def main():
             
             # Create visualizations
             create_visualizations(df)
+
+            print("\nAnalyzing OIC Specific Data...")
+            oic_df = create_oic_dataframe()
+            analyze_oic_data(oic_df)
             
-            print("\nVisualizations have been created and saved as PNG files:")
-            print("- gdp_by_country.png")
-            print("- debt_to_gdp_ratio.png")
-            print("- gdp_vs_debt_scatter.png")
-            print("- correlation_heatmap.png")
-            print("- debt_categories_pie.png")
-            print("- gdp_debt_boxplot.png")
-            print("- debt_ratio_horizontal.png")
+            print("\nOIC Specific Visualizations created.")
             
             # Save to CSV for further analysis
             output_file = "emerging_markets_debt_analysis.csv"
@@ -369,6 +366,127 @@ def main():
         print(f"An error occurred: {e}")
         import traceback
         traceback.print_exc()
+
+def create_oic_dataframe():
+    """Create a dataframe specifically for OIC member countries analysis."""
+    # Data Verified for 2024 (Estimates)
+    data = {
+        'Country': [
+            'Indonesia', 'Saudi Arabia', 'Turkey', 'Iran', 'UAE', 
+            'Malaysia', 'Egypt', 'Bangladesh', 'Pakistan', 'Nigeria', 
+            'Kazakhstan', 'Qatar'
+        ],
+        'GDP (USD) Billion': [
+            1396, 1240, 1320, 437, 537, 
+            422, 389, 450, 373, 188, 
+            288, 218
+        ], # Verified 2024 estimates
+        'Debt-to-GDP Ratio (%)': [
+            38.8, 26.2, 24.7, 36.8, 31.3, 
+            70.4, 90.1, 21.8, 72.5, 46.6, 
+            23.4, 43.0
+        ]  # Verified 2024 estimates
+    }
+    
+    # Calculate Total Debt for consistency
+    gdps = data['GDP (USD) Billion']
+    ratios = data['Debt-to-GDP Ratio (%)']
+    debts = [gdp * (ratio / 100) for gdp, ratio in zip(gdps, ratios)]
+    data['Total Debt (USD) Billion'] = debts
+    
+    return pd.DataFrame(data)
+
+def analyze_oic_data(df):
+    """Generate OIC specific visualizations."""
+    sns.set_theme(style="whitegrid")
+    
+    # 1. OIC GDP Comparison (Horizontal Bar for clarity instead of TreeMap which requires squarify)
+    plt.figure(figsize=(10, 6)) # Reduced size
+    df_sorted = df.sort_values('GDP (USD) Billion', ascending=True)
+    colors = sns.color_palette("viridis", len(df))
+    
+    bars = plt.barh(df_sorted['Country'], df_sorted['GDP (USD) Billion'], color=colors)
+    plt.title('Top OIC Economies by GDP (2024 Estimates)', fontsize=14)
+    plt.xlabel('GDP (USD Billion)', fontsize=11)
+    
+    # Add values
+    for bar in bars:
+        width = bar.get_width()
+        plt.text(width + 10, bar.get_y() + bar.get_height()/2, 
+                 f'${width:,.0f}B', va='center', fontsize=8)
+                 
+    plt.tight_layout()
+    plt.savefig('oic_gdp_bar.png', dpi=150, bbox_inches='tight') # Reduced DPI
+    plt.close('all') # Force close all
+
+    # 2. OIC Debt-to-GDP Ratio
+    plt.figure(figsize=(10, 6)) # Reduced size
+    df_sorted_debt = df.sort_values('Debt-to-GDP Ratio (%)', ascending=True)
+    
+    # Color coding: Green (<30%), Amber (30-60%), Red (>60%)
+    colors = []
+    for ratio in df_sorted_debt['Debt-to-GDP Ratio (%)']:
+        if ratio < 30: colors.append('#2ecc71') # Green
+        elif ratio < 60: colors.append('#f1c40f') # Amber
+        else: colors.append('#e74c3c') # Red
+        
+    bars = plt.barh(df_sorted_debt['Country'], df_sorted_debt['Debt-to-GDP Ratio (%)'], color=colors)
+    plt.title('OIC Members Debt-to-GDP Ratio (2024)', fontsize=16)
+    plt.xlabel('Debt-to-GDP Ratio (%)', fontsize=12)
+    
+    # Add values
+    for bar in bars:
+        width = bar.get_width()
+        plt.text(width + 0.5, bar.get_y() + bar.get_height()/2, 
+                 f'{width:.1f}%', va='center', fontsize=9)
+    
+    # Add Legend manually
+    from matplotlib.patches import Patch
+    legend_elements = [
+        Patch(facecolor='#2ecc71', label='Low Risk (<30%)'),
+        Patch(facecolor='#f1c40f', label='Moderate Risk (30-60%)'),
+        Patch(facecolor='#e74c3c', label='High Risk (>60%)')
+    ]
+    plt.legend(handles=legend_elements, loc='lower right', fontsize=8)
+    
+    plt.tight_layout()
+    plt.savefig('oic_debt_ratio.png', dpi=150, bbox_inches='tight') # Reduced DPI
+    plt.close('all')
+
+    # 3. GDP vs Debt Scatter for OIC
+    plt.figure(figsize=(10, 6)) # Reduced size
+    sns.scatterplot(
+        data=df, 
+        x='GDP (USD) Billion', 
+        y='Total Debt (USD) Billion',
+        size='Debt-to-GDP Ratio (%)',
+        sizes=(100, 1000),
+        alpha=0.6,
+        palette='deep',
+        hue='Country',
+        legend=False
+    )
+    
+    # Add labels
+    for i in range(len(df)):
+        plt.text(
+            df.iloc[i]['GDP (USD) Billion']+20, 
+            df.iloc[i]['Total Debt (USD) Billion'], 
+            df.iloc[i]['Country'], 
+            fontsize=8
+        )
+        
+    plt.title('OIC: Economic Size vs Debt Load', fontsize=14)
+    plt.xlabel('GDP (USD Billion)')
+    plt.ylabel('Total Debt (USD Billion)')
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig('oic_scatter.png', dpi=150, bbox_inches='tight') # Reduced DPI
+    plt.close('all')
+
+
+                
+
 
 
 
