@@ -468,6 +468,37 @@ def analyze_bangladesh_data():
     plt.savefig('bd_debt_trend.png', dpi=120, bbox_inches='tight') # Low DPI
     plt.close('all')
 
+    # 4. BDT Exchange Rate Drop (USD to BDT)
+    # Historical Data (Approximate Average Annual Exchange Rates)
+    # Source: Bangladesh Bank / Macrotrends
+    bdt_data = {
+        'Year': [2010, 2012, 2014, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+        'Exchange Rate (BDT/USD)': [69.0, 82.0, 77.5, 78.5, 83.9, 84.5, 84.8, 85.5, 95.0, 106.0, 117.0, 125.0]
+    }
+    df_bdt = pd.DataFrame(bdt_data)
+
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(data=df_bdt, x='Year', y='Exchange Rate (BDT/USD)', marker='o', linewidth=3, color='#e74c3c')
+    plt.fill_between(df_bdt['Year'], df_bdt['Exchange Rate (BDT/USD)'], alpha=0.1, color='#e74c3c')
+    
+    plt.title('Devaluation of Bangladeshi Taka (2010-2025)', fontsize=14)
+    plt.xlabel('Year', fontsize=11)
+    plt.ylabel('Exchange Rate (BDT per 1 USD)', fontsize=11)
+    
+    # Highlight the sharp drop
+    plt.annotate('Sharp Devaluation', xy=(2022, 95), xytext=(2018, 105),
+             arrowprops=dict(facecolor='black', shrink=0.05),
+             fontsize=10)
+
+    for i, txt in enumerate(df_bdt['Exchange Rate (BDT/USD)']):
+        if i % 2 == 0 or i == len(df_bdt)-1: # Show every other label to avoid clutter, showing last one
+             plt.text(df_bdt['Year'][i], txt+2, f'Tk {txt}', ha='center', fontsize=9)
+        
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig('bdt_exchange_rate_trend.png', dpi=120, bbox_inches='tight')
+    plt.close('all')
+
 def analyze_oic_data(df):
     """Generate OIC specific visualizations."""
     sns.set_theme(style="whitegrid")
