@@ -474,29 +474,36 @@ def analyze_bangladesh_data():
 
     # 4. BDT Exchange Rate Drop (USD to BDT)
     # Historical Data (Approximate Average Annual Exchange Rates)
-    # Source: Bangladesh Bank / Macrotrends
+    # Source: Bangladesh Bank / Macrotrends / Economic History
     bdt_data = {
-        'Year': [2010, 2012, 2014, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
-        'Exchange Rate (BDT/USD)': [69.0, 82.0, 77.5, 78.5, 83.9, 84.5, 84.8, 85.5, 95.0, 106.0, 117.0, 125.0]
+        'Year': [
+            1972, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 
+            2012, 2014, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025
+        ],
+        'Exchange Rate (BDT/USD)': [
+            7.7, 12.0, 15.4, 28.0, 32.8, 40.3, 52.1, 64.3, 69.0, 
+            82.0, 77.5, 78.5, 83.9, 84.5, 84.8, 85.5, 95.0, 106.0, 117.0, 125.0
+        ]
     }
     df_bdt = pd.DataFrame(bdt_data)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 6))
     sns.lineplot(data=df_bdt, x='Year', y='Exchange Rate (BDT/USD)', marker='o', linewidth=3, color='#e74c3c')
     plt.fill_between(df_bdt['Year'], df_bdt['Exchange Rate (BDT/USD)'], alpha=0.1, color='#e74c3c')
     
-    plt.title('Devaluation of Bangladeshi Taka (2010-2025)', fontsize=14)
+    plt.title('Devaluation of Bangladeshi Taka (1972-2025)', fontsize=14)
     plt.xlabel('Year', fontsize=11)
     plt.ylabel('Exchange Rate (BDT per 1 USD)', fontsize=11)
     
     # Highlight the sharp drop
-    plt.annotate('Sharp Devaluation', xy=(2022, 95), xytext=(2018, 105),
+    plt.annotate('Sharp Devaluation', xy=(2022, 95), xytext=(2010, 105),
              arrowprops=dict(facecolor='black', shrink=0.05),
              fontsize=10)
 
     for i, txt in enumerate(df_bdt['Exchange Rate (BDT/USD)']):
-        if i % 2 == 0 or i == len(df_bdt)-1: # Show every other label to avoid clutter, showing last one
-             plt.text(df_bdt['Year'][i], txt+2, f'Tk {txt}', ha='center', fontsize=9)
+        # Show labels for key years to avoid clutter
+        if df_bdt['Year'][i] in [1972, 1980, 1990, 2000, 2010, 2020, 2024, 2025]:
+             plt.text(df_bdt['Year'][i], txt+3, f'Tk {txt}', ha='center', fontsize=9)
         
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -565,25 +572,30 @@ def analyze_global_inflation():
     sns.set_theme(style="whitegrid")
     
     # Historical US Inflation Data (CPI Annual %) - Approx sources: World Bank/IMF/Macrotrends
-    # 2024 estimated
-    data = {
-        'Year': list(range(2000, 2025)),
-        'Inflation Rate (%)': [
-            3.4, 2.8, 1.6, 2.3, 2.7, 3.4, 3.2, 2.8, 3.8, -0.4, # 2000-2009
-            1.6, 3.2, 2.1, 1.5, 1.6, 0.1, 1.3, 2.1, 2.4, 1.8, # 2010-2019
-            1.2, 4.7, 8.0, 4.1, 2.9 # 2020-2024 (Estimates for recent)
-        ]
-    }
+    # Expanded to 1970-2024
+    years = list(range(1970, 2025))
+    inflation_rates = [
+        # 1970-1979 (High Inflation Era)
+        5.8, 4.3, 3.3, 6.2, 11.1, 9.1, 5.8, 6.5, 7.6, 11.3,
+        # 1980-1989 (Volcker Shock & Recovery)
+        13.5, 10.3, 6.1, 3.2, 4.3, 3.6, 1.9, 3.6, 4.1, 4.8,
+        # 1990-1999 (Stable)
+        5.4, 4.2, 3.0, 3.0, 2.6, 2.8, 3.0, 2.3, 1.6, 2.2,
+        # 2000-2009
+        3.4, 2.8, 1.6, 2.3, 2.7, 3.4, 3.2, 2.8, 3.8, -0.4,
+        # 2010-2019
+        1.6, 3.2, 2.1, 1.5, 1.6, 0.1, 1.3, 2.1, 2.4, 1.8,
+        # 2020-2024 (COVID & Post-COVID)
+        1.2, 4.7, 8.0, 4.1, 2.9
+    ]
     
+    data = {'Year': years, 'Inflation Rate (%)': inflation_rates}
     df = pd.DataFrame(data)
     
-    # Calculate Purchasing Power of $100 (Base Year 2000)
+    # Calculate Purchasing Power of $100 (Base Year 1970)
     # Formula: Value = Previous_Value / (1 + Inflation_Rate/100)
     purchasing_power = []
     val = 100.0
-    # First year (2000) - Start of year $100. End of year? 
-    # Let's assume the chart shows purchasing power at the END of each year, 
-    # relative to start of 2000 being 100.
     
     for rate in df['Inflation Rate (%)']:
         val = val / (1 + rate/100)
@@ -598,65 +610,28 @@ def analyze_global_inflation():
     color1 = '#e74c3c'
     ax1.set_xlabel('Year', fontsize=12)
     ax1.set_ylabel('Inflation Rate (%)', color=color1, fontsize=12)
-    bars = ax1.bar(df['Year'], df['Inflation Rate (%)'], color=color1, alpha=0.6, label='Inflation Rate')
+    bars = ax1.bar(df['Year'], df['Inflation Rate (%)'], color=color1, alpha=0.3, label='Inflation Rate')
     ax1.tick_params(axis='y', labelcolor=color1)
-    ax1.grid(False) # Turn off grid for bars to not clutter
-    
-    # Add values to high inflation bars
-    for i, v in enumerate(df['Inflation Rate (%)']):
-        if v > 4 or v < 0:
-            ax1.text(df['Year'][i], v + 0.1, f'{v}%', ha='center', fontsize=8)
+    ax1.grid(False) 
     
     # Line Chart for Purchasing Power
     ax2 = ax1.twinx()
     color2 = '#2c3e50'
-    ax2.set_ylabel('Purchasing Power of $100 (Base 2000)', color=color2, fontsize=12)
-    ax2.plot(df['Year'], df['Purchasing Power ($)'], color=color2, linewidth=3, marker='o', markersize=4, label='Purchasing Power')
+    ax2.set_ylabel('Purchasing Power of $100 (Base 1970)', color=color2, fontsize=12)
+    ax2.plot(df['Year'], df['Purchasing Power ($)'], color=color2, linewidth=3, label='Purchasing Power')
     ax2.tick_params(axis='y', labelcolor=color2)
     ax2.set_ylim(0, 110)
     
-    # Add annotation for final value
+    # Annotations
     final_val = df['Purchasing Power ($)'].iloc[-1]
-    ax2.text(2024.5, final_val, f'${final_val:.2f}', color=color2, fontweight='bold', va='center')
+    ax2.text(2025, final_val, f'${final_val:.2f}', color=color2, fontweight='bold', va='center')
     
-    # Add annotation for 2022 shock
-    ax1.axvspan(2021.5, 2022.5, color='yellow', alpha=0.2)
-    plt.text(2022, 95, 'Post-COVID\nInflation Shock', ha='center', fontsize=9, bbox=dict(facecolor='white', alpha=0.8))
-
-    plt.title('Erosion of Value: US Dollar Inflation & Purchasing Power (2000-2024)', fontsize=16, pad=20)
+    # Highlight 2022
+    ax1.axvspan(2021.5, 2022.5, color='orange', alpha=0.2)
+    
+    plt.title('US Dollar Value Erosion (1970-2024)', fontsize=16, pad=20)
     fig.tight_layout()
     plt.savefig('global_inflation_trends.png', dpi=150, bbox_inches='tight')
-    plt.close('all')
-
-    # 3. GDP vs Debt Scatter for OIC
-    plt.figure(figsize=(10, 6)) # Reduced size
-    sns.scatterplot(
-        data=df, 
-        x='GDP (USD) Billion', 
-        y='Total Debt (USD) Billion',
-        size='Debt-to-GDP Ratio (%)',
-        sizes=(100, 1000),
-        alpha=0.6,
-        palette='deep',
-        hue='Country',
-        legend=False
-    )
-    
-    # Add labels
-    for i in range(len(df)):
-        plt.text(
-            df.iloc[i]['GDP (USD) Billion']+20, 
-            df.iloc[i]['Total Debt (USD) Billion'], 
-            df.iloc[i]['Country'], 
-            fontsize=8
-        )
-        
-    plt.title('OIC: Economic Size vs Debt Load', fontsize=14)
-    plt.xlabel('GDP (USD Billion)')
-    plt.ylabel('Total Debt (USD Billion)')
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig('oic_scatter.png', dpi=150, bbox_inches='tight') # Reduced DPI
     plt.close('all')
 
 
