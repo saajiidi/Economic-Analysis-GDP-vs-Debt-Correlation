@@ -357,6 +357,10 @@ def main():
             print("\nAnalyzing Bangladesh Specific Data...")
             analyze_bangladesh_data()
             print("\nBangladesh Specific Visualizations created.")
+
+            print("\nAnalyzing Global Inflation Data...")
+            analyze_global_inflation()
+            print("\nGlobal Inflation Visualizations created.")
             
             # Save to CSV for further analysis
             output_file = "emerging_markets_debt_analysis.csv"
@@ -554,6 +558,74 @@ def analyze_oic_data(df):
     
     plt.tight_layout()
     plt.savefig('oic_debt_ratio.png', dpi=150, bbox_inches='tight') # Reduced DPI
+    plt.close('all')
+
+def analyze_global_inflation():
+    """Analyze and visualize Global/US Dollar Inflation and Purchasing Power Drop."""
+    sns.set_theme(style="whitegrid")
+    
+    # Historical US Inflation Data (CPI Annual %) - Approx sources: World Bank/IMF/Macrotrends
+    # 2024 estimated
+    data = {
+        'Year': list(range(2000, 2025)),
+        'Inflation Rate (%)': [
+            3.4, 2.8, 1.6, 2.3, 2.7, 3.4, 3.2, 2.8, 3.8, -0.4, # 2000-2009
+            1.6, 3.2, 2.1, 1.5, 1.6, 0.1, 1.3, 2.1, 2.4, 1.8, # 2010-2019
+            1.2, 4.7, 8.0, 4.1, 2.9 # 2020-2024 (Estimates for recent)
+        ]
+    }
+    
+    df = pd.DataFrame(data)
+    
+    # Calculate Purchasing Power of $100 (Base Year 2000)
+    # Formula: Value = Previous_Value / (1 + Inflation_Rate/100)
+    purchasing_power = []
+    val = 100.0
+    # First year (2000) - Start of year $100. End of year? 
+    # Let's assume the chart shows purchasing power at the END of each year, 
+    # relative to start of 2000 being 100.
+    
+    for rate in df['Inflation Rate (%)']:
+        val = val / (1 + rate/100)
+        purchasing_power.append(val)
+        
+    df['Purchasing Power ($)'] = purchasing_power
+    
+    # Visualization
+    fig, ax1 = plt.subplots(figsize=(12, 7))
+    
+    # Bar Chart for Inflation
+    color1 = '#e74c3c'
+    ax1.set_xlabel('Year', fontsize=12)
+    ax1.set_ylabel('Inflation Rate (%)', color=color1, fontsize=12)
+    bars = ax1.bar(df['Year'], df['Inflation Rate (%)'], color=color1, alpha=0.6, label='Inflation Rate')
+    ax1.tick_params(axis='y', labelcolor=color1)
+    ax1.grid(False) # Turn off grid for bars to not clutter
+    
+    # Add values to high inflation bars
+    for i, v in enumerate(df['Inflation Rate (%)']):
+        if v > 4 or v < 0:
+            ax1.text(df['Year'][i], v + 0.1, f'{v}%', ha='center', fontsize=8)
+    
+    # Line Chart for Purchasing Power
+    ax2 = ax1.twinx()
+    color2 = '#2c3e50'
+    ax2.set_ylabel('Purchasing Power of $100 (Base 2000)', color=color2, fontsize=12)
+    ax2.plot(df['Year'], df['Purchasing Power ($)'], color=color2, linewidth=3, marker='o', markersize=4, label='Purchasing Power')
+    ax2.tick_params(axis='y', labelcolor=color2)
+    ax2.set_ylim(0, 110)
+    
+    # Add annotation for final value
+    final_val = df['Purchasing Power ($)'].iloc[-1]
+    ax2.text(2024.5, final_val, f'${final_val:.2f}', color=color2, fontweight='bold', va='center')
+    
+    # Add annotation for 2022 shock
+    ax1.axvspan(2021.5, 2022.5, color='yellow', alpha=0.2)
+    plt.text(2022, 95, 'Post-COVID\nInflation Shock', ha='center', fontsize=9, bbox=dict(facecolor='white', alpha=0.8))
+
+    plt.title('Erosion of Value: US Dollar Inflation & Purchasing Power (2000-2024)', fontsize=16, pad=20)
+    fig.tight_layout()
+    plt.savefig('global_inflation_trends.png', dpi=150, bbox_inches='tight')
     plt.close('all')
 
     # 3. GDP vs Debt Scatter for OIC
