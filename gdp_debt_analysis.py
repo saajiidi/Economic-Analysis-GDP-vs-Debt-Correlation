@@ -334,7 +334,7 @@ def main():
         df = create_dataframe()
         
         if df is not None and not df.empty:
-            create_debt_analysis_plots(df)
+            # create_debt_analysis_plots(df)
 
             print("\nFirst few rows of the data:")
             print(df.head())
@@ -346,13 +346,17 @@ def main():
             analyze_insights(df)
             
             # Create visualizations
-            create_visualizations(df)
+            # create_visualizations(df)
 
             print("\nAnalyzing OIC Specific Data...")
-            oic_df = create_oic_dataframe()
-            analyze_oic_data(oic_df)
+            # oic_df = create_oic_dataframe()
+            # analyze_oic_data(oic_df)
             
-            print("\nOIC Specific Visualizations created.")
+            print("\nOIC Specific Visualizations skipped for optimization.")
+
+            print("\nAnalyzing Bangladesh Specific Data...")
+            analyze_bangladesh_data()
+            print("\nBangladesh Specific Visualizations created.")
             
             # Save to CSV for further analysis
             output_file = "emerging_markets_debt_analysis.csv"
@@ -395,6 +399,74 @@ def create_oic_dataframe():
     data['Total Debt (USD) Billion'] = debts
     
     return pd.DataFrame(data)
+
+def analyze_bangladesh_data():
+    """Generate Bangladesh specific historical trend visualizations."""
+    sns.set_theme(style="whitegrid")
+    
+    years = [2020, 2021, 2022, 2023, 2024, 2025]
+    
+    # Data compiled from research (Macrotrends, World Bank, IMF, FocusEconomics)
+    data = {
+        'Year': years,
+        'GDP (USD Billion)': [374, 416, 460, 437, 450, 475],
+        'Inflation Rate (%)': [5.6, 5.6, 7.7, 9.0, 10.3, 8.5],
+        'Debt-to-GDP (%)': [34.5, 35.6, 37.9, 39.7, 41.0, 40.3],
+        'Forex Reserves (USD Billion)': [43.2, 46.2, 33.7, 21.9, 21.4, 26.7]
+    }
+    
+    df_bd = pd.DataFrame(data)
+    
+    # 1. GDP Trend Line Plot
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(data=df_bd, x='Year', y='GDP (USD Billion)', marker='o', linewidth=3, color='#006a4e') # BD Green
+    plt.fill_between(df_bd['Year'], df_bd['GDP (USD Billion)'], alpha=0.1, color='#006a4e')
+    
+    plt.title('Bangladesh GDP Growth Trajectory (2020-2025)', fontsize=14)
+    plt.xlabel('Year', fontsize=11)
+    plt.ylabel('GDP (USD Billion)', fontsize=11)
+    
+    for i, txt in enumerate(df_bd['GDP (USD Billion)']):
+        plt.text(df_bd['Year'][i], txt+5, f'${txt}B', ha='center', fontsize=9)
+        
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig('bd_gdp_trend.png', dpi=120, bbox_inches='tight') # Low DPI
+    plt.close('all')
+    
+    # 2. Inflation vs Reserves (Dual Axis)
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    
+    color = '#f44336' # Red for Inflation
+    ax1.set_xlabel('Year', fontsize=11)
+    ax1.set_ylabel('Inflation Rate (%)', color=color, fontsize=11)
+    ax1.plot(df_bd['Year'], df_bd['Inflation Rate (%)'], color=color, marker='s', linewidth=2, label='Inflation')
+    ax1.tick_params(axis='y', labelcolor=color)
+    
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+    color = '#2196f3' # Blue for Reserves
+    ax2.set_ylabel('Forex Reserves (USD Billion)', color=color, fontsize=11)
+    ax2.plot(df_bd['Year'], df_bd['Forex Reserves (USD Billion)'], color=color, marker='o', linewidth=2, linestyle='--', label='Reserves')
+    ax2.tick_params(axis='y', labelcolor=color)
+    
+    plt.title('Inflation vs Forex Reserves Dynamics', fontsize=14)
+    fig.tight_layout()
+    plt.savefig('bd_inflation_reserves.png', dpi=120, bbox_inches='tight') # Low DPI
+    plt.close('all')
+    
+    # 3. Debt Trend
+    plt.figure(figsize=(10, 6))
+    sns.barplot(data=df_bd, x='Year', y='Debt-to-GDP (%)', palette='Reds')
+    
+    plt.title('Bangladesh Public Debt Evolution', fontsize=14)
+    plt.ylim(0, 50) # Set reasonable limit
+    
+    for i, v in enumerate(df_bd['Debt-to-GDP (%)']):
+        plt.text(i, v + 0.5, f'{v}%', ha='center', fontsize=9)
+        
+    plt.tight_layout()
+    plt.savefig('bd_debt_trend.png', dpi=120, bbox_inches='tight') # Low DPI
+    plt.close('all')
 
 def analyze_oic_data(df):
     """Generate OIC specific visualizations."""
