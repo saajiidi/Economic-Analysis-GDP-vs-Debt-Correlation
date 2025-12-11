@@ -99,16 +99,52 @@ def create_visualizations(df):
         'Moderate (30-60%)': '#388e3c' # Green
     }
     
-    fig_pie = px.pie(
-        names=debt_counts.index,
-        values=debt_counts.values,
-        title='Distribution of Debt Categories',
-        hole=0.4,
-        color=debt_counts.index,
-        color_discrete_map=color_map
+    # 5. Debt Categories Map Chart (Comprehensive Global)
+    # Define logical colors for risk levels
+    color_map = {
+        'Critical (>200%)': '#8b0000', # Dark Red
+        'High (>90%)': '#d32f2f',      # Red
+        'High (60-90%)': '#f57c00',    # Orange
+        'Moderate (30-60%)': '#388e3c', # Green
+        'Low (<30%)': '#2ecc71'        # Light Green
+    }
+    
+    # Try to load comprehensive data if available
+    map_df = df
+    locations_col = 'Country'
+    location_mode = 'country names'
+    
+    if os.path.exists('global_debt_data_2024.csv'):
+        try:
+            map_df = pd.read_csv('global_debt_data_2024.csv')
+            locations_col = 'Country Code'
+            location_mode = 'ISO-3'
+            print("Using comprehensive global dataset for map.")
+        except Exception as e:
+            print(f"Could not load global data: {e}")
+
+    fig_map = px.choropleth(
+        map_df,
+        locations=locations_col,
+        locationmode=location_mode,
+        color='Debt Category',
+        hover_name='Country',
+        hover_data=['Debt-to-GDP Ratio (%)'],
+        color_discrete_map=color_map,
+        title='Global Debt Risk Map (2024 Estimates)'
     )
-    fig_pie.update_traces(textinfo='percent+label')
-    fig_pie.write_html("interactive_plots/debt_categories_pie.html")
+    
+    fig_map.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=0, r=0, t=40, b=0),
+        geo=dict(
+            showframe=False,
+            showcoastlines=True,
+            projection_type='equirectangular'
+        )
+    )
+    fig_map.write_html("interactive_plots/debt_category_map.html")
     
     # 7. Horizontal Bar Plot (Overview)
     df_sorted_asc = df.sort_values('Debt-to-GDP Ratio (%)', ascending=True)
