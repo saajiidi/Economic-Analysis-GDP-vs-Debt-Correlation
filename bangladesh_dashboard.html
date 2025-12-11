@@ -27,15 +27,25 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            padding: 1.5rem;
+            padding: 1rem;
+            /* Reduced padding for iframes */
             margin-bottom: 2rem;
             border-top: 4px solid #006a4e;
+            height: 500px;
+            /* Fixed height for iframes */
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .chart-title {
             color: #006a4e;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             text-align: center;
         }
 
@@ -111,7 +121,7 @@
     </header>
 
     <div class="container">
-        <!-- Key Metrics Row (2024/25 Estimates) -->
+        <!-- Key Metrics Row 1 (Macro) -->
         <div class="row mb-4">
             <div class="col-md-3">
                 <div class="metric-card">
@@ -139,20 +149,40 @@
             </div>
         </div>
 
+        <!-- Key Metrics Row 2 (Trade & Living Standards) -->
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="metric-card" style="border-bottom-color: #2196f3;">
+                    <div class="metric-value">$27B+</div>
+                    <div class="metric-label">Remittance Inflows (2024)</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="metric-card" style="border-bottom-color: #9c27b0;">
+                    <div class="metric-value">$50B</div>
+                    <div class="metric-label">Export Earnings (FY25 Est)</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="metric-card" style="border-bottom-color: #ff9800;">
+                    <div class="metric-value">$2,687</div>
+                    <div class="metric-label">GDP Per Capita</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Charts -->
         <div class="row">
             <!-- GDP Trend -->
             <div class="col-lg-8">
                 <div class="chart-container">
-                    <h3 class="chart-title">GDP Growth Trajectory</h3>
-                    <img src="bd_gdp_trend.png" alt="Bangladesh GDP Trend" class="img-fluid rounded">
-                    <p class="text-center text-muted mt-2">Consistent growth trajectory despite global headwinds.</p>
+                    <iframe src="interactive_plots/bd_gdp_trend.html" title="Bangladesh GDP Trend"></iframe>
                 </div>
             </div>
             <!-- Insights Panel -->
             <div class="col-lg-4">
                 <div class="chart-container"
-                    style="background: #e8f5e9; border-top: none; border-left: 5px solid #006a4e;">
+                    style="background: #e8f5e9; border-top: none; border-left: 5px solid #006a4e; height: 500px; overflow-y: auto;">
                     <h4 class="mb-3">Economic Snapshot</h4>
                     <ul class="list-unstyled">
                         <li class="mb-3">
@@ -179,16 +209,21 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h3 class="chart-title">Inflation vs Reserves</h3>
-                    <img src="bd_inflation_reserves.png" alt="Inflation vs Reserves" class="img-fluid rounded">
-                    <p class="text-muted text-center mt-2 small">Dual axis: Inflation (Red) vs Reserves (Blue)</p>
+                    <iframe src="interactive_plots/bd_inflation_reserves.html" title="Inflation vs Reserves"></iframe>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h3 class="chart-title">Public Debt Evolution</h3>
-                    <img src="bd_debt_trend.png" alt="Debt Trend" class="img-fluid rounded">
-                    <p class="text-muted text-center mt-2 small">Debt-to-GDP ratio remains within manageable limits.</p>
+                    <iframe src="interactive_plots/bd_debt_trend.html" title="Debt Trend"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW Foreign Reserve Graph -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="chart-container" style="border-top: 4px solid #2196f3;">
+                    <iframe src="interactive_plots/bd_forex_reserves.html" title="Forex Reserves Trend"></iframe>
                 </div>
             </div>
         </div>
@@ -197,11 +232,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="chart-container" style="border-top: 4px solid #e74c3c;">
-                    <h3 class="chart-title" style="color: #e74c3c;">Currency Devaluation Timeline</h3>
-                    <img src="bdt_exchange_rate_trend.png" alt="BDT Exchange Rate Trend"
-                        class="img-fluid rounded d-block mx-auto">
-                    <p class="text-center text-muted mt-2">Significant depreciation of the Bangladeshi Taka against the
-                        US Dollar since 2022.</p>
+                    <iframe src="interactive_plots/bdt_exchange_rate_trend.html"
+                        title="BDT Exchange Rate Trend"></iframe>
                 </div>
             </div>
         </div>

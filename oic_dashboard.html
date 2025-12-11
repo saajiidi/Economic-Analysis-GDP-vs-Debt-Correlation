@@ -28,15 +28,23 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            padding: 1.5rem;
+            padding: 1rem;
             margin-bottom: 2rem;
             border-top: 4px solid #11998e;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .chart-title {
             color: #11998e;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             text-align: center;
         }
 
@@ -106,12 +114,12 @@
     </header>
 
     <div class="container">
-        <!-- Key Metrics Row -->
+        <!-- Key Metrics Row 1 (Macro) -->
         <div class="row mb-4">
             <div class="col-md-3">
                 <div class="metric-card">
-                    <div class="metric-value">$6.3T+</div>
-                    <div class="metric-label">Combined GDP (Top 12)</div>
+                    <div class="metric-value">$9.2T+</div>
+                    <div class="metric-label">Combined GDP (All 57)</div>
                 </div>
             </div>
             <div class="col-md-3">
@@ -122,14 +130,30 @@
             </div>
             <div class="col-md-3">
                 <div class="metric-card">
-                    <div class="metric-value">~38%</div>
-                    <div class="metric-label">Avg. Debt Ratio</div>
+                    <div class="metric-value">1.9B</div>
+                    <div class="metric-label">Total Population</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="metric-card">
-                    <div class="metric-value">1.9B</div>
-                    <div class="metric-label">Population Population</div>
+                    <div class="metric-value">~38%</div>
+                    <div class="metric-label">Avg. Debt Ratio</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics Row 2 (Trade) -->
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <div class="metric-card" style="border-bottom-color: #f1c40f;">
+                    <div class="metric-value">20.36%</div>
+                    <div class="metric-label">Intra-OIC Trade Share (2024)</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="metric-card" style="border-bottom-color: #2ecc71;">
+                    <div class="metric-value">$1.0 Trillion</div>
+                    <div class="metric-label">Intra-OIC Trade Volume</div>
                 </div>
             </div>
         </div>
@@ -139,8 +163,7 @@
             <!-- GDP Bar Chart -->
             <div class="col-lg-8">
                 <div class="chart-container">
-                    <h3 class="chart-title">Economic Output by Member State</h3>
-                    <img src="oic_gdp_bar.png" alt="OIC GDP Distribution" class="img-fluid rounded">
+                    <iframe src="interactive_plots/oic_gdp_bar.html" title="OIC GDP Distribution"></iframe>
                 </div>
             </div>
             <!-- Insights -->
@@ -162,16 +185,12 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h3 class="chart-title">Debt Sustainability Analysis</h3>
-                    <img src="oic_debt_ratio.png" alt="OIC Debt Ratios" class="img-fluid rounded">
-                    <p class="text-muted text-center mt-2 small">Green = Low Risk (<30%), Amber=Moderate (30-60%),
-                            Red=High (>60%)</p>
+                    <iframe src="interactive_plots/oic_debt_ratio.html" title="OIC Debt Ratios"></iframe>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h3 class="chart-title">Correlation: Size vs. Debt</h3>
-                    <img src="oic_scatter.png" alt="OIC Scatter Plot" class="img-fluid rounded">
+                    <iframe src="interactive_plots/oic_scatter.html" title="OIC Scatter Plot"></iframe>
                 </div>
             </div>
         </div>
