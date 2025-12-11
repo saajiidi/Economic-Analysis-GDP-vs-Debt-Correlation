@@ -38,42 +38,58 @@ def create_visualizations(df):
         x='Country',
         y='Debt-to-GDP Ratio (%)',
         title='Debt-to-GDP Ratio by Country',
-        color='Debt-to-GDP Ratio (%)',
-        color_continuous_scale='RdYlGn_r', # Red high, Green low
-        text='Debt-to-GDP Ratio (%)'
-    )
-    # Add threshold line
-    fig_ratio.add_hline(y=60, line_dash="dash", line_color="red", annotation_text="60% Warning Threshold")
-    fig_ratio.update_layout(
-        template='plotly_white',
-        autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-    fig_ratio.write_html("interactive_plots/debt_to_gdp_ratio.html")
+    # Define logical colors for risk levels
+    color_map = {
+        'Critical (>200%)': '#8b0000', # Dark Red
+        'High (>90%)': '#d32f2f',      # Red
+        'High (60-90%)': '#f57c00',    # Orange
+        'Moderate (30-60%)': '#388e3c', # Green
+        'Low (<30%)': '#2ecc71'        # Light Green
+    }
 
-    # 3. Scatter Plot: GDP vs Total Debt
-    # 3. Scatter Plot: GDP vs Total Debt
+    # 2. Scatter Plot: GDP vs Debt
     fig_scatter = px.scatter(
         df,
         x='GDP (USD) Billion',
-        y='Total Debt (USD) Billion',
-        size='Debt-to-GDP Ratio (%)',
-        color='Country',
+        y='Debt-to-GDP Ratio (%)',
+        color='Debt Category',
+        size='GDP (USD) Billion',
         hover_name='Country',
-        # text='Country',  # Removed to prevent overlapping. Hover shows details.
-        size_max=40,
-        opacity=0.7,
         log_x=True,
-        log_y=True,
-        title='GDP vs Total Debt (Bubble size = Debt Ratio)'
+        size_max=60,
+        title='GDP Size vs Debt Levels (Log Scale)',
+        color_discrete_map=color_map
     )
-    fig_scatter.update_traces(textposition='top center')
+    
     fig_scatter.update_layout(
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_scatter.write_html("interactive_plots/gdp_vs_debt_scatter.html")
+
+    # 3. Bar Chart: Debt Ratios
+    fig_bar = px.bar(
+        df.sort_values('Debt-to-GDP Ratio (%)', ascending=False).head(20),
+        x='Country',
+        y='Debt-to-GDP Ratio (%)',
+        color='Debt Category',
+        title='Top 20 Countries by Debt Ratio',
+        color_discrete_map=color_map
+    )
+    
+    fig_bar.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=10, r=10, t=30, b=10),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5),
+        title_font_size=14,
+        font=dict(size=10)
+    )
+    fig_bar.write_html("interactive_plots/debt_to_gdp_ratio.html")
 
     # 4. Correlation Heatmap
     numeric_df = df.select_dtypes(include=[np.number])
@@ -86,29 +102,36 @@ def create_visualizations(df):
         color_continuous_scale='RdBu_r',
         title='Correlation Heatmap'
     )
+    fig_corr.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
+    )
     fig_corr.write_html("interactive_plots/correlation_heatmap.html")
 
-    # 5. Debt Categories Pie Chart
-    debt_counts = df['Debt Category'].value_counts()
+    # 5. Box Plot
+    fig_box = px.box(
+        df,
+        x='Debt Category',
+        y='Debt-to-GDP Ratio (%)',
+        color='Debt Category',
+        title='Debt Distribution by Category',
+        color_discrete_map=color_map
+    )
     
-    # Define logical colors for risk levels
-    color_map = {
-        'Critical (>200%)': '#8b0000', # Dark Red
-        'High (>90%)': '#d32f2f',      # Red
-        'High (60-90%)': '#f57c00',    # Orange
-        'Moderate (30-60%)': '#388e3c' # Green
-    }
+    fig_box.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=10, r=10, t=30, b=10),
+        showlegend=False,
+        title_font_size=14,
+        font=dict(size=10)
+    )
+    fig_box.write_html("interactive_plots/gdp_debt_boxplot.html")
     
-    # 5. Debt Categories Map Chart (Comprehensive Global)
-    # Define logical colors for risk levels
-    color_map = {
-        'Critical (>200%)': '#8b0000', # Dark Red
-        'High (>90%)': '#d32f2f',      # Red
-        'High (60-90%)': '#f57c00',    # Orange
-        'Moderate (30-60%)': '#388e3c', # Green
-        'Low (<30%)': '#2ecc71'        # Light Green
-    }
-    
+    # 6. Debt Categories Map Chart (Comprehensive Global)
     # Try to load comprehensive data if available
     map_df = df
     locations_col = 'Country'
@@ -137,7 +160,10 @@ def create_visualizations(df):
     fig_map.update_layout(
         template='plotly_white',
         autosize=True,
-        margin=dict(l=0, r=0, t=40, b=0),
+        margin=dict(l=0, r=0, t=30, b=0),
+        legend=dict(orientation="h", yanchor="bottom", y=0, xanchor="left", x=0),
+        title_font_size=14,
+        font=dict(size=10),
         geo=dict(
             showframe=False,
             showcoastlines=True,
