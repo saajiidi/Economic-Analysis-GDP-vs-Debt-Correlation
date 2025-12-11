@@ -45,7 +45,11 @@ def analyze_financial_history():
         title='US Money Supply Explosion (1914-2025)',
         xaxis_title='Year',
         yaxis_title='M2 Money Supply (Billions USD)',
-        template='plotly_white',
+        template='plotly_dark',
+        paper_bgcolor='#1e1e1e',
+        plot_bgcolor='#1e1e1e',
+        autosize=True,
+        margin=dict(l=40, r=40, t=60, b=40),
         hovermode='x unified'
     )
     fig_m2.write_html("interactive_plots/us_m2_supply.html")
@@ -71,7 +75,7 @@ def analyze_financial_history():
             x=df_compare['Year'], y=df_compare['Oil (USD/bbl)'],
             name="Crude Oil ($)",
             mode='lines',
-            line=dict(color='#34495e', width=3) # Oil color (Dark Blue/Grey)
+            line=dict(color='#bdc3c7', width=3) # Light Grey for Oil in Dark Mode
         ),
         secondary_y=False
     )
@@ -88,12 +92,16 @@ def analyze_financial_history():
     
     fig_compare.update_layout(
         title='Black Gold vs Real Gold (1970-2025)',
-        template='plotly_white',
+        template='plotly_dark',
+        paper_bgcolor='#1e1e1e',
+        plot_bgcolor='#1e1e1e',
+        autosize=True,
+        margin=dict(l=40, r=40, t=60, b=40),
         hovermode='x unified',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     
-    fig_compare.update_yaxes(title_text="Crude Oil Price ($/bbl)", color='#34495e', secondary_y=False)
+    fig_compare.update_yaxes(title_text="Crude Oil Price ($/bbl)", color='#bdc3c7', secondary_y=False)
     fig_compare.update_yaxes(title_text="Gold Price ($/oz)", color='#f39c12', secondary_y=True)
     
     fig_compare.write_html("interactive_plots/oil_vs_gold.html")
@@ -112,9 +120,9 @@ def analyze_financial_history():
         y=purchasing_power,
         mode='lines+markers',
         name='Purchasing Power',
-        line=dict(color='#c0392b', width=4),
+        line=dict(color='#e74c3c', width=4),
         fill='tozeroy',
-        fillcolor='rgba(192, 57, 43, 0.1)'
+        fillcolor='rgba(231, 76, 60, 0.2)'
     ))
     
     fig_pp.add_annotation(x=1913, y=1.0, text="Federal Reserve<br>Founded (1913)", showarrow=True, arrowhead=1, ay=-40)
@@ -124,7 +132,11 @@ def analyze_financial_history():
         title='Purchasing Power of $1 (1913 Baseline)',
         xaxis_title='Year',
         yaxis_title='Value of $1 (1913 Basis)',
-        template='plotly_white',
+        template='plotly_dark',
+        paper_bgcolor='#1e1e1e',
+        plot_bgcolor='#1e1e1e',
+        autosize=True,
+        margin=dict(l=40, r=40, t=60, b=40),
         yaxis_tickformat='$.2f'
     )
     fig_pp.write_html("interactive_plots/purchasing_power.html")

@@ -6,123 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bangladesh Economic Outlook (2025)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0fdf4;
-            /* Very light green tint */
-            color: #333;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #006a4e, #f44336);
-            /* BD Flag colors */
-            color: white;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 5px solid #004d38;
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            padding: 1rem;
-            /* Reduced padding for iframes */
-            margin-bottom: 2rem;
-            border-top: 4px solid #006a4e;
-            height: 500px;
-            /* Fixed height for iframes */
-            overflow: hidden;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .chart-title {
-            color: #006a4e;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .metric-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            border-bottom: 4px solid #f44336;
-            margin-bottom: 1.5rem;
-        }
-
-        .metric-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #333;
-        }
-
-        .metric-label {
-            color: #666;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .back-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: all 0.3s;
-            border: 1px solid white;
-        }
-
-        .back-btn:hover {
-            background-color: white;
-            color: #006a4e;
-        }
-
-        .trend-up {
-            color: #2ecc71;
-            font-size: 0.9em;
-        }
-
-        .trend-down {
-            color: #e74c3c;
-            font-size: 0.9em;
-        }
-
-        footer {
-            background: #1a2a3a;
-            color: #bdc3c7;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-    </style>
+    <link href="css/styles.css" rel="stylesheet">
 </head>
 
 <body>
 
-    <header class="header text-center">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
-            <h1 class="display-4 fw-bold">Bangladesh Economic Outlook</h1>
-            <p class="lead">GDP Growth, Inflation & Debt Analysis (2020-2025)</p>
-            <div class="mt-3">
-                <a href="index.html" class="back-btn me-2">&larr; Global Overview</a>
-                <a href="oic_dashboard.html" class="back-btn">OIC Dashboard &rarr;</a>
+            <a class="navbar-brand" href="index.html">EcoPro Monitor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Global Overview</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="bangladesh_dashboard.html">Bangladesh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="oic_dashboard.html">OIC Members</a></li>
+                    <li class="nav-item"><a class="nav-link" href="financial_history.html">Financial History</a></li>
+                </ul>
             </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="header-section bangladesh text-center">
+        <div class="container animate-fade-up">
+            <h1 class="header-title display-4">Bangladesh Economic Outlook</h1>
+            <p class="lead opacity-75">GDP Growth, Inflation & Debt Analysis (2020-2025)</p>
         </div>
     </header>
 
     <div class="container">
         <!-- Key Metrics Row 1 (Macro) -->
-        <div class="row mb-4">
+        <div class="row mb-4 animate-fade-up" style="animation-delay: 0.1s;">
             <div class="col-md-3">
                 <div class="metric-card">
                     <div class="metric-value">$450B</div>
@@ -150,7 +67,7 @@
         </div>
 
         <!-- Key Metrics Row 2 (Trade & Living Standards) -->
-        <div class="row mb-5">
+        <div class="row mb-5 animate-fade-up" style="animation-delay: 0.2s;">
             <div class="col-md-4">
                 <div class="metric-card" style="border-bottom-color: #2196f3;">
                     <div class="metric-value">$27B+</div>
@@ -181,23 +98,22 @@
             </div>
             <!-- Insights Panel -->
             <div class="col-lg-4">
-                <div class="chart-container"
-                    style="background: #e8f5e9; border-top: none; border-left: 5px solid #006a4e; height: 500px; overflow-y: auto;">
-                    <h4 class="mb-3">Economic Snapshot</h4>
+                <div class="chart-container" style="background: #e8f5e9; height: 500px; overflow-y: auto;">
+                    <h4 class="mb-4 fw-bold" style="color: #006a4e;">Economic Snapshot</h4>
                     <ul class="list-unstyled">
-                        <li class="mb-3">
+                        <li class="mb-3 p-3 bg-white rounded shadow-sm">
                             <strong>📈 Growth Engine:</strong> GDP has grown from $374B in 2020 to an estimated $475B in
                             2025, showing resilience.
                         </li>
-                        <li class="mb-3">
+                        <li class="mb-3 p-3 bg-white rounded shadow-sm">
                             <strong>⚠️ Inflation Challenge:</strong> Inflation peaked at over 10% in 2024 but is
                             projected to ease to ~8.5% in 2025 as policy measures take hold.
                         </li>
-                        <li class="mb-3">
+                        <li class="mb-3 p-3 bg-white rounded shadow-sm">
                             <strong>💰 Debt Level:</strong> Public debt remains sustainable at ~41% of GDP, well below
                             the 60% danger threshold often cited for developing economies.
                         </li>
-                        <li class="mb-3">
+                        <li class="mb-3 p-3 bg-white rounded shadow-sm">
                             <strong>🏦 Reserves:</strong> After dipping in 2023/24, measures to stabilize reserves are
                             showing early signs of recovery.
                         </li>

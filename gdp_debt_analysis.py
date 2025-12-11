@@ -24,7 +24,11 @@ def create_visualizations(df):
         color='GDP (USD) Billion',
         color_continuous_scale='Viridis'
     )
-    fig_gdp.update_layout(template='plotly_white')
+    fig_gdp.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
     fig_gdp.write_html("interactive_plots/gdp_by_country.html")
 
     # 2. Debt-to-GDP Ratio
@@ -40,7 +44,11 @@ def create_visualizations(df):
     )
     # Add threshold line
     fig_ratio.add_hline(y=60, line_dash="dash", line_color="red", annotation_text="60% Warning Threshold")
-    fig_ratio.update_layout(template='plotly_white')
+    fig_ratio.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
     fig_ratio.write_html("interactive_plots/debt_to_gdp_ratio.html")
 
     # 3. Scatter Plot: GDP vs Total Debt
@@ -60,7 +68,11 @@ def create_visualizations(df):
         title='GDP vs Total Debt (Bubble size = Debt Ratio)'
     )
     fig_scatter.update_traces(textposition='top center')
-    fig_scatter.update_layout(template='plotly_white')
+    fig_scatter.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
     fig_scatter.write_html("interactive_plots/gdp_vs_debt_scatter.html")
 
     # 4. Correlation Heatmap
@@ -112,7 +124,11 @@ def create_visualizations(df):
     )
     fig_horiz.add_vline(x=60, line_dash="dash", line_color="orange", annotation_text="Warning")
     fig_horiz.add_vline(x=90, line_dash="dash", line_color="red", annotation_text="Danger")
-    fig_horiz.update_layout(template='plotly_white')
+    fig_horiz.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
     fig_horiz.write_html("interactive_plots/debt_ratio_horizontal.html")
 
     # Extra: Data Distribution (Box Plots)
@@ -121,7 +137,12 @@ def create_visualizations(df):
     fig_box.add_trace(go.Box(y=df['GDP (USD) Billion'], name="GDP ($B)"), row=1, col=1)
     fig_box.add_trace(go.Box(y=df['Debt-to-GDP Ratio (%)'], name="Debt Ratio (%)"), row=1, col=2)
     
-    fig_box.update_layout(title_text="Data Distributions", template='plotly_white')
+    fig_box.update_layout(
+        title_text="Data Distributions", 
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
     fig_box.write_html("interactive_plots/gdp_debt_boxplot.html")
 
 def create_oic_visualizations(df):
@@ -139,7 +160,11 @@ def create_oic_visualizations(df):
         color='GDP (USD) Billion',
         color_continuous_scale='Viridis'
     )
-    fig_oic_gdp.update_layout(template='plotly_white')
+    fig_oic_gdp.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
     fig_oic_gdp.write_html("interactive_plots/oic_gdp_bar.html")
     
     # 2. OIC Debt Ratio
@@ -164,7 +189,9 @@ def create_oic_visualizations(df):
     fig_oic_debt.update_layout(
         title='OIC Members Debt-to-GDP Ratio (2024)',
         xaxis_title='Debt Ratio (%)',
-        template='plotly_white'
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     fig_oic_debt.write_html("interactive_plots/oic_debt_ratio.html")
     
@@ -181,7 +208,11 @@ def create_oic_visualizations(df):
         title='OIC: Size vs Debt Risk'
     )
     fig_oic_scatter.update_traces(textposition='top center')
-    fig_oic_scatter.update_layout(template='plotly_white')
+    fig_oic_scatter.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
     fig_oic_scatter.write_html("interactive_plots/oic_scatter.html")
 
 def analyze_global_inflation():
@@ -230,7 +261,9 @@ def analyze_global_inflation():
     fig.update_layout(
         title_text="US Dollar Value Erosion (1970-2024)",
         template='plotly_white',
-        hovermode='x unified'
+        hovermode='x unified',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     
     fig.update_yaxes(title_text="Inflation Rate (%)", secondary_y=False)
@@ -368,7 +401,9 @@ def analyze_commodities_usd():
         title='Precious Metals Price History (USD) 1970-2025',
         template='plotly_white',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     
     fig.update_yaxes(title_text="Gold Price (USD/oz)", color='#FFD700', secondary_y=False)

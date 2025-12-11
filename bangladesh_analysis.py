@@ -47,7 +47,9 @@ def analyze_bangladesh_data():
         xaxis_title='Year',
         yaxis_title='GDP (USD Billion)',
         template='plotly_white',
-        hovermode='x unified'
+        hovermode='x unified',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     fig_gdp.write_html("interactive_plots/bd_gdp_trend.html")
 
@@ -85,7 +87,9 @@ def analyze_bangladesh_data():
         title='Inflation vs Forex Reserves Dynamics',
         template='plotly_white',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     
     fig_dual.update_yaxes(title_text="Inflation Rate (%)", color='#f44336', secondary_y=False)
@@ -114,7 +118,9 @@ def analyze_bangladesh_data():
         xaxis_title='Year',
         yaxis_title='Reserves (USD Billion)',
         template='plotly_white',
-        hovermode='x unified'
+        hovermode='x unified',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     fig_reserves.write_html("interactive_plots/bd_forex_reserves.html")
 
@@ -135,7 +141,9 @@ def analyze_bangladesh_data():
         xaxis_title='Year',
         yaxis_title='Debt-to-GDP (%)',
         template='plotly_white',
-        yaxis_range=[0, 50]
+        yaxis_range=[0, 50],
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     fig_debt.write_html("interactive_plots/bd_debt_trend.html")
 
@@ -179,7 +187,9 @@ def analyze_bangladesh_data():
         xaxis_title='Year',
         yaxis_title='BDT per 1 USD',
         template='plotly_white',
-        hovermode='x unified'
+        hovermode='x unified',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     fig_curr.write_html("interactive_plots/bdt_exchange_rate_trend.html")
 
@@ -249,7 +259,9 @@ def analyze_bangladesh_data():
         title='Gold & Silver Prices in Bangladesh (Per Bhori) 1972-2025',
         template='plotly_white',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     
     fig_bd_comm.update_yaxes(title_text="Gold Price (BDT)", color='#b7950b', secondary_y=False)
