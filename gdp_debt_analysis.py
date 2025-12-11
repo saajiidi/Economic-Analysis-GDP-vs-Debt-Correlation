@@ -223,9 +223,13 @@ def create_oic_visualizations(df):
         color_continuous_scale='Viridis'
     )
     fig_oic_gdp.update_layout(
+        title='Top 10 OIC Economies by GDP',
+        xaxis_title='GDP ($B)',
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_oic_gdp.write_html("interactive_plots/oic_gdp_bar.html")
     
@@ -253,7 +257,9 @@ def create_oic_visualizations(df):
         xaxis_title='Debt Ratio (%)',
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_oic_debt.write_html("interactive_plots/oic_debt_ratio.html")
     
@@ -273,7 +279,10 @@ def create_oic_visualizations(df):
     fig_oic_scatter.update_layout(
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_oic_scatter.write_html("interactive_plots/oic_scatter.html")
 
@@ -295,7 +304,10 @@ def create_oic_visualizations(df):
     fig_pop.update_layout(
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_pop.write_html("interactive_plots/oic_population_pie.html")
 
@@ -320,7 +332,10 @@ def create_oic_visualizations(df):
     fig_growth.update_layout(
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10),
+        coloraxis_showscale=False # Hide color bar to save space
     )
     fig_growth.write_html("interactive_plots/oic_growth_bar.html")
 
