@@ -44,6 +44,7 @@ def create_visualizations(df):
     fig_ratio.write_html("interactive_plots/debt_to_gdp_ratio.html")
 
     # 3. Scatter Plot: GDP vs Total Debt
+    # 3. Scatter Plot: GDP vs Total Debt
     fig_scatter = px.scatter(
         df,
         x='GDP (USD) Billion',
@@ -51,9 +52,14 @@ def create_visualizations(df):
         size='Debt-to-GDP Ratio (%)',
         color='Country',
         hover_name='Country',
-        size_max=60,
+        text='Country',
+        size_max=40,  # Reduced max size to prevent heavy overlapping
+        opacity=0.7,   # Added opacity to see overlapping points
+        log_x=True,    # Log scale to spread out clustered economies
+        log_y=True,
         title='GDP vs Total Debt (Bubble size = Debt Ratio)'
     )
+    fig_scatter.update_traces(textposition='top center')
     fig_scatter.update_layout(template='plotly_white')
     fig_scatter.write_html("interactive_plots/gdp_vs_debt_scatter.html")
 
@@ -158,6 +164,8 @@ def create_oic_visualizations(df):
         color='Country',
         size='GDP (USD) Billion',
         text='Country',
+        size_max=40,   # Reduced size
+        opacity=0.8,
         title='OIC: Size vs Debt Risk'
     )
     fig_oic_scatter.update_traces(textposition='top center')
