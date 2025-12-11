@@ -14,6 +14,15 @@ def create_visualizations(df):
     """Create various interactive visualizations from the dataframe."""
     check_output_dir()
     
+    # Define logical colors for risk levels
+    color_map = {
+        'Critical (>200%)': '#8b0000', # Dark Red
+        'High (>90%)': '#d32f2f',      # Red
+        'High (60-90%)': '#f57c00',    # Orange
+        'Moderate (30-60%)': '#388e3c', # Green
+        'Low (<30%)': '#2ecc71'        # Light Green
+    }
+    
     # 1. GDP Bar Plot
     fig_gdp = px.bar(
         df.sort_values('GDP (USD) Billion', ascending=False),
@@ -27,25 +36,11 @@ def create_visualizations(df):
     fig_gdp.update_layout(
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_gdp.write_html("interactive_plots/gdp_by_country.html")
-
-    # 2. Debt-to-GDP Ratio
-    df_sorted = df.sort_values('Debt-to-GDP Ratio (%)', ascending=False)
-    fig_ratio = px.bar(
-        df_sorted,
-        x='Country',
-        y='Debt-to-GDP Ratio (%)',
-        title='Debt-to-GDP Ratio by Country',
-    # Define logical colors for risk levels
-    color_map = {
-        'Critical (>200%)': '#8b0000', # Dark Red
-        'High (>90%)': '#d32f2f',      # Red
-        'High (60-90%)': '#f57c00',    # Orange
-        'Moderate (30-60%)': '#388e3c', # Green
-        'Low (<30%)': '#2ecc71'        # Light Green
-    }
 
     # 2. Scatter Plot: GDP vs Debt
     fig_scatter = px.scatter(
@@ -131,8 +126,7 @@ def create_visualizations(df):
     )
     fig_box.write_html("interactive_plots/gdp_debt_boxplot.html")
     
-    # 6. Debt Categories Map Chart (Comprehensive Global)
-    # Try to load comprehensive data if available
+    # 6. Global Map
     map_df = df
     locations_col = 'Country'
     location_mode = 'country names'
@@ -154,7 +148,7 @@ def create_visualizations(df):
         hover_name='Country',
         hover_data=['Debt-to-GDP Ratio (%)'],
         color_discrete_map=color_map,
-        title='Global Debt Risk Map (2024 Estimates)'
+        title='Global Debt Risk Map (2024)'
     )
     
     fig_map.update_layout(
@@ -189,23 +183,12 @@ def create_visualizations(df):
     fig_horiz.update_layout(
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_horiz.write_html("interactive_plots/debt_ratio_horizontal.html")
 
-    # Extra: Data Distribution (Box Plots)
-    fig_box = make_subplots(rows=1, cols=2, subplot_titles=("GDP Distribution", "Debt Ratio Distribution"))
-    
-    fig_box.add_trace(go.Box(y=df['GDP (USD) Billion'], name="GDP ($B)"), row=1, col=1)
-    fig_box.add_trace(go.Box(y=df['Debt-to-GDP Ratio (%)'], name="Debt Ratio (%)"), row=1, col=2)
-    
-    fig_box.update_layout(
-        title_text="Data Distributions", 
-        template='plotly_white',
-        autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-    fig_box.write_html("interactive_plots/gdp_debt_boxplot.html")
 
 def create_oic_visualizations(df):
     """Generate OIC specific interactive visualizations."""
@@ -217,14 +200,12 @@ def create_oic_visualizations(df):
         x='GDP (USD) Billion',
         y='Country',
         orientation='h',
-        title='Top OIC Economies by GDP (2024 Estimates)',
+        title='Top 10 OIC Economies by GDP (2024)',
         text='GDP (USD) Billion',
         color='GDP (USD) Billion',
         color_continuous_scale='Viridis'
     )
     fig_oic_gdp.update_layout(
-        title='Top 10 OIC Economies by GDP',
-        xaxis_title='GDP ($B)',
         template='plotly_white',
         autosize=True,
         margin=dict(l=10, r=10, t=30, b=10),
@@ -271,7 +252,7 @@ def create_oic_visualizations(df):
         color='Country',
         size='GDP (USD) Billion',
         text='Country',
-        size_max=40,   # Reduced size
+        size_max=40,
         opacity=0.8,
         title='OIC: Size vs Debt Risk'
     )
@@ -286,18 +267,17 @@ def create_oic_visualizations(df):
     )
     fig_oic_scatter.write_html("interactive_plots/oic_scatter.html")
 
-    # 4. OIC Population Distribution (New Request)
+    # 4. OIC Population Distribution
     print("Generating OIC Population Chart...")
-    # Top 5 by Population (2024 Est)
     pop_data = {
         'Country': ['Indonesia', 'Pakistan', 'Nigeria', 'Bangladesh', 'Egypt', 'Others'],
-        'Population (Millions)': [279, 245, 229, 173, 114, 860] # Approx rest
+        'Population (Millions)': [279, 245, 229, 173, 114, 860]
     }
     fig_pop = px.pie(
         pop_data, 
         values='Population (Millions)', 
         names='Country',
-        title='OIC Demographics: Member Population Share',
+        title='OIC Demographics: Population Share',
         hole=0.4
     )
     fig_pop.update_traces(textposition='inside', textinfo='percent+label')
@@ -311,7 +291,7 @@ def create_oic_visualizations(df):
     )
     fig_pop.write_html("interactive_plots/oic_population_pie.html")
 
-    # 5. OIC GDP Growth Rates (New Request)
+    # 5. OIC GDP Growth Rates
     print("Generating OIC Growth Chart...")
     growth_data = {
         'Country': ['Guyana', 'Senegal', 'Bangladesh', 'Indonesia', 'Saudi Arabia', 'Turkey', 'Egypt'],
@@ -326,7 +306,7 @@ def create_oic_visualizations(df):
         color='GDP Growth 2024 (%)',
         color_continuous_scale='Viridis',
         text_auto=True,
-        title='Fastest Growing Major OIC Economies (2024 Est)'
+        title='Fastest Growing OIC Economies (2024)'
     )
     
     fig_growth.update_layout(
@@ -335,7 +315,7 @@ def create_oic_visualizations(df):
         margin=dict(l=10, r=10, t=30, b=10),
         title_font_size=14,
         font=dict(size=10),
-        coloraxis_showscale=False # Hide color bar to save space
+        coloraxis_showscale=False
     )
     fig_growth.write_html("interactive_plots/oic_growth_bar.html")
 
@@ -383,15 +363,18 @@ def analyze_global_inflation():
     )
     
     fig.update_layout(
-        title_text="US Dollar Value Erosion (1970-2024)",
+        title_text="US Dollar Erosion (1970-2024)",
         template='plotly_white',
         hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5),
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     
-    fig.update_yaxes(title_text="Inflation Rate (%)", secondary_y=False)
-    fig.update_yaxes(title_text="Purchasing Power of $100 ", secondary_y=True)
+    fig.update_yaxes(title_text="Inflation (%)", secondary_y=False)
+    fig.update_yaxes(title_text="Power ($)", secondary_y=True)
     
     fig.write_html("interactive_plots/global_inflation_trends.html")
 
@@ -444,32 +427,6 @@ def create_oic_dataframe():
     df['Total Debt (USD) Billion'] = df['GDP (USD) Billion'] * (df['Debt-to-GDP Ratio (%)'] / 100)
     return df
 
-def main():
-    """Main function to analyze the GDP and debt data."""
-    try:
-        print("Analyzing Global GDP and Debt Data...")
-        df = create_dataframe()
-        create_visualizations(df)
-        print("Global interactive visualizations created.")
-
-        print("Analyzing OIC Specific Data...")
-        oic_df = create_oic_dataframe()
-        create_oic_visualizations(oic_df)
-        print("OIC interactive visualizations created.")
-
-        print("Analyzing Global Inflation Data...")
-        analyze_global_inflation()
-        print("Global inflation visualization created.")
-
-        print("Analyzing Global Commodities Data...")
-        analyze_commodities_usd()
-        print("Commodities visualization created.")
-        
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        import traceback
-        traceback.print_exc()
-
 def analyze_commodities_usd():
     """Analyze and visualize Gold and Silver prices in USD (1970-2025)."""
     check_output_dir()
@@ -501,7 +458,7 @@ def analyze_commodities_usd():
     fig.add_trace(
         go.Scatter(
             x=df['Year'], y=df['Gold (USD/oz)'],
-            name="Gold Price ($)",
+            name="Gold ($)",
             mode='lines',
             line=dict(color='#FFD700', width=3), # Gold color
             fill='tozeroy',
@@ -514,7 +471,7 @@ def analyze_commodities_usd():
     fig.add_trace(
         go.Scatter(
             x=df['Year'], y=df['Silver (USD/oz)'],
-            name="Silver Price ($)",
+            name="Silver ($)",
             mode='lines',
             line=dict(color='#C0C0C0', width=3), # Silver color
         ),
@@ -522,18 +479,46 @@ def analyze_commodities_usd():
     )
     
     fig.update_layout(
-        title='Precious Metals Price History (USD) 1970-2025',
+        title='Precious Metals (USD) 1970-2025',
         template='plotly_white',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5),
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     
-    fig.update_yaxes(title_text="Gold Price (USD/oz)", color='#FFD700', secondary_y=False)
-    fig.update_yaxes(title_text="Silver Price (USD/oz)", color='#7f8c8d', secondary_y=True) # Darker grey for text readability
+    fig.update_yaxes(title_text="Gold ($/oz)", color='#FFD700', secondary_y=False)
+    fig.update_yaxes(title_text="Silver ($/oz)", color='#7f8c8d', secondary_y=True)
     
     fig.write_html("interactive_plots/global_commodities_usd.html")
+
+def main():
+    """Main function to analyze the GDP and debt data."""
+    try:
+        print("Analyzing Global GDP and Debt Data...")
+        df = create_dataframe()
+        create_visualizations(df)
+        print("Global interactive visualizations created.")
+
+        print("Analyzing OIC Specific Data...")
+        oic_df = create_oic_dataframe()
+        create_oic_visualizations(oic_df)
+        print("OIC interactive visualizations created.")
+
+        print("Analyzing Global Inflation Data...")
+        analyze_global_inflation()
+        print("Global inflation visualization created.")
+
+        print("Analyzing Global Commodities Data...")
+        analyze_commodities_usd()
+        print("Commodities visualization created.")
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()

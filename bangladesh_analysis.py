@@ -43,13 +43,15 @@ def analyze_bangladesh_data():
     ))
     
     fig_gdp.update_layout(
-        title='Bangladesh GDP Growth Trajectory (2020-2025)',
+        title='Bangladesh GDP (2020-2025)',
         xaxis_title='Year',
-        yaxis_title='GDP (USD Billion)',
+        yaxis_title='GDP ($B)',
         template='plotly_white',
         hovermode='x unified',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_gdp.write_html("interactive_plots/bd_gdp_trend.html")
 
@@ -62,7 +64,7 @@ def analyze_bangladesh_data():
         go.Scatter(
             x=df_bd['Year'], 
             y=df_bd['Inflation Rate (%)'],
-            name="Inflation Rate",
+            name="Inflation",
             mode='lines+markers',
             marker=dict(symbol='square', size=8),
             line=dict(color='#f44336', width=3)
@@ -75,7 +77,7 @@ def analyze_bangladesh_data():
         go.Scatter(
             x=df_bd['Year'], 
             y=df_bd['Forex Reserves (USD Billion)'],
-            name="Forex Reserves",
+            name="Reserves",
             mode='lines+markers',
             marker=dict(symbol='circle', size=8),
             line=dict(color='#2196f3', width=3, dash='dash')
@@ -84,22 +86,23 @@ def analyze_bangladesh_data():
     )
     
     fig_dual.update_layout(
-        title='Inflation vs Forex Reserves Dynamics',
+        title='Inflation vs Reserves',
         template='plotly_white',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     
-    fig_dual.update_yaxes(title_text="Inflation Rate (%)", color='#f44336', secondary_y=False)
-    fig_dual.update_yaxes(title_text="Forex Reserves ($B)", color='#2196f3', secondary_y=True)
-    fig_dual.update_xaxes(title_text="Year")
+    fig_dual.update_yaxes(title_text="Inflation (%)", color='#f44336', secondary_y=False)
+    fig_dual.update_yaxes(title_text="Reserves ($B)", color='#2196f3', secondary_y=True)
     
     fig_dual.write_html("interactive_plots/bd_inflation_reserves.html")
     
     print("Generating Interactive Foreign Reserves Plot...")
-    # 3. Dedicated Foreign Reserves Plot (New Request)
+    # 3. Dedicated Foreign Reserves Plot
     fig_reserves = go.Figure()
     fig_reserves.add_trace(go.Scatter(
         x=df_bd['Year'], 
@@ -114,13 +117,15 @@ def analyze_bangladesh_data():
     ))
     
     fig_reserves.update_layout(
-        title='Foreign Exchange Reserves Trend (2020-2025)',
+        title='Forex Reserves Trend',
         xaxis_title='Year',
-        yaxis_title='Reserves (USD Billion)',
+        yaxis_title='Reserves ($B)',
         template='plotly_white',
         hovermode='x unified',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_reserves.write_html("interactive_plots/bd_forex_reserves.html")
 
@@ -139,11 +144,13 @@ def analyze_bangladesh_data():
     fig_debt.update_layout(
         title='Public Debt Evolution',
         xaxis_title='Year',
-        yaxis_title='Debt-to-GDP (%)',
+        yaxis_title='Debt (%)',
         template='plotly_white',
         yaxis_range=[0, 50],
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_debt.write_html("interactive_plots/bd_debt_trend.html")
 
@@ -166,13 +173,12 @@ def analyze_bangladesh_data():
         x=df_bdt['Year'], 
         y=df_bdt['Exchange Rate (BDT/USD)'],
         mode='lines',
-        name='Exchange Rate',
+        name='Exch Rate',
         line=dict(color='#e74c3c', width=3),
         fill='tozeroy',
         fillcolor='rgba(231, 76, 60, 0.1)'
     ))
     
-    # Add annotation for sharp drop (kept from original)
     fig_curr.add_annotation(
         x=2022, y=95,
         xref="x", yref="y",
@@ -183,19 +189,20 @@ def analyze_bangladesh_data():
     )
     
     fig_curr.update_layout(
-        title='Devaluation of Bangladeshi Taka (1972-2025)',
+        title='BDT Devaluation (1972-2025)',
         xaxis_title='Year',
-        yaxis_title='BDT per 1 USD',
+        yaxis_title='BDT/USD',
         template='plotly_white',
         hovermode='x unified',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_curr.write_html("interactive_plots/bdt_exchange_rate_trend.html")
 
     print("Generating Interactive Gold/Silver vs BDT Plot...")
-    # 6. Commodities in BDT (New Request)
-    # Define commodity data in USD (same source as global analysis)
+    # 6. Commodities in BDT
     comm_data = {
         'Year': [
             1972, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 
@@ -211,21 +218,10 @@ def analyze_bangladesh_data():
         ]
     }
     df_comm = pd.DataFrame(comm_data)
-    
-    # Merge with BDT rates
-    # Note: df_bdt and df_comm have matching Years above for simplicity of this update
     df_merged = pd.merge(df_comm, df_bdt, on='Year')
     
-    # Calculate BDT Prices
     df_merged['Gold_BDT_per_oz'] = df_merged['Gold_USD'] * df_merged['Exchange Rate (BDT/USD)']
     df_merged['Silver_BDT_per_oz'] = df_merged['Silver_USD'] * df_merged['Exchange Rate (BDT/USD)']
-    
-    # Convert to Bhori (11.66 grams) - Standard unit in BD (1 Troy oz = 31.1035g -> 1 oz = 2.66 Bhori)
-    # Actually, let's keep it simple: Price per Ounce (users can convert) or 
-    # better yet, Price per Bhori is more culturally relevant.
-    # 1 Troy Oz = 31.1035 grams. 1 Bhori = 11.664 grams.
-    # Ratio: 1 Troy Oz = 2.666 Bhori. 
-    # So Price Per Bhori = Price Per Oz / 2.666
     
     conversion_factor = 2.666
     df_merged['Gold_BDT_per_Bhori'] = df_merged['Gold_BDT_per_oz'] / conversion_factor
@@ -236,7 +232,7 @@ def analyze_bangladesh_data():
     fig_bd_comm.add_trace(
         go.Scatter(
             x=df_merged['Year'], y=df_merged['Gold_BDT_per_Bhori'],
-            name="Gold (BDT/Bhori)",
+            name="Gold",
             mode='lines',
             line=dict(color='#FFD700', width=3),
             fill='tozeroy',
@@ -248,29 +244,31 @@ def analyze_bangladesh_data():
     fig_bd_comm.add_trace(
         go.Scatter(
             x=df_merged['Year'], y=df_merged['Silver_BDT_per_Bhori'],
-            name="Silver (BDT/Bhori)",
+            name="Silver",
             mode='lines',
-            line=dict(color='#BDC3C7', width=3), # Silver
+            line=dict(color='#BDC3C7', width=3)
         ),
         secondary_y=True
     )
     
     fig_bd_comm.update_layout(
-        title='Gold & Silver Prices in Bangladesh (Per Bhori) 1972-2025',
+        title='Gold & Silver in BDT',
         template='plotly_white',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     
-    fig_bd_comm.update_yaxes(title_text="Gold Price (BDT)", color='#b7950b', secondary_y=False)
-    fig_bd_comm.update_yaxes(title_text="Silver Price (BDT)", color='#7f8c8d', secondary_y=True)
+    fig_bd_comm.update_yaxes(title_text="Gold (BDT)", color='#b7950b', secondary_y=False)
+    fig_bd_comm.update_yaxes(title_text="Silver (BDT)", color='#7f8c8d', secondary_y=True)
     
     fig_bd_comm.write_html("interactive_plots/bd_commodities.html")
     
     print("Generating Interactive Remittances Plot...")
-    # 7. Remittances Inflow (New Request)
+    # 7. Remittances Inflow
     remit_data = {
         'Year': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
         'Remittances (USD Billion)': [15.3, 14.9, 13.5, 15.5, 18.3, 21.7, 24.8, 21.0, 21.6, 23.9]
@@ -288,12 +286,14 @@ def analyze_bangladesh_data():
     ))
     
     fig_remit.update_layout(
-        title='Yearly Remittance Inflows (2015-2024)',
+        title='Remittance Inflows',
         xaxis_title='Year',
-        yaxis_title='Amount (USD Billion)',
+        yaxis_title='USD Billion',
         template='plotly_white',
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_remit.write_html("interactive_plots/bd_remittances.html")
 
@@ -317,14 +317,16 @@ def analyze_bangladesh_data():
     ))
     
     fig_trade.update_layout(
-        title='Trade Balance: Exports vs Imports',
+        title='Trade Balance: Exp vs Imp',
         xaxis_title='Year',
         yaxis_title='USD Billion',
         barmode='group',
         template='plotly_white',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=10, r=10, t=30, b=10),
+        title_font_size=14,
+        font=dict(size=10)
     )
     fig_trade.write_html("interactive_plots/bd_trade_balance.html")
 
@@ -332,4 +334,3 @@ def analyze_bangladesh_data():
 
 if __name__ == "__main__":
     analyze_bangladesh_data()
-
