@@ -251,6 +251,53 @@ def create_oic_visualizations(df):
     )
     fig_oic_scatter.write_html("interactive_plots/oic_scatter.html")
 
+    # 4. OIC Population Distribution (New Request)
+    print("Generating OIC Population Chart...")
+    # Top 5 by Population (2024 Est)
+    pop_data = {
+        'Country': ['Indonesia', 'Pakistan', 'Nigeria', 'Bangladesh', 'Egypt', 'Others'],
+        'Population (Millions)': [279, 245, 229, 173, 114, 860] # Approx rest
+    }
+    fig_pop = px.pie(
+        pop_data, 
+        values='Population (Millions)', 
+        names='Country',
+        title='OIC Demographics: Member Population Share',
+        hole=0.4
+    )
+    fig_pop.update_traces(textposition='inside', textinfo='percent+label')
+    fig_pop.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    fig_pop.write_html("interactive_plots/oic_population_pie.html")
+
+    # 5. OIC GDP Growth Rates (New Request)
+    print("Generating OIC Growth Chart...")
+    growth_data = {
+        'Country': ['Guyana', 'Senegal', 'Bangladesh', 'Indonesia', 'Saudi Arabia', 'Turkey', 'Egypt'],
+        'GDP Growth 2024 (%)': [33.9, 8.8, 5.7, 5.0, 2.7, 3.1, 3.0]
+    }
+    df_growth = pd.DataFrame(growth_data).sort_values('GDP Growth 2024 (%)', ascending=False)
+    
+    fig_growth = px.bar(
+        df_growth,
+        x='Country',
+        y='GDP Growth 2024 (%)',
+        color='GDP Growth 2024 (%)',
+        color_continuous_scale='Viridis',
+        text_auto=True,
+        title='Fastest Growing Major OIC Economies (2024 Est)'
+    )
+    
+    fig_growth.update_layout(
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    fig_growth.write_html("interactive_plots/oic_growth_bar.html")
+
 def analyze_global_inflation():
     """Analyze and visualize Global/US Dollar Inflation interactively."""
     check_output_dir()

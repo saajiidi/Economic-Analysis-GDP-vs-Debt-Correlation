@@ -269,6 +269,65 @@ def analyze_bangladesh_data():
     
     fig_bd_comm.write_html("interactive_plots/bd_commodities.html")
     
+    print("Generating Interactive Remittances Plot...")
+    # 7. Remittances Inflow (New Request)
+    remit_data = {
+        'Year': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+        'Remittances (USD Billion)': [15.3, 14.9, 13.5, 15.5, 18.3, 21.7, 24.8, 21.0, 21.6, 23.9]
+    }
+    df_remit = pd.DataFrame(remit_data)
+    
+    fig_remit = go.Figure()
+    fig_remit.add_trace(go.Bar(
+        x=df_remit['Year'],
+        y=df_remit['Remittances (USD Billion)'],
+        name='Remittances',
+        marker_color='#27ae60',
+        text=[f'${x}B' for x in df_remit['Remittances (USD Billion)']],
+        textposition='auto'
+    ))
+    
+    fig_remit.update_layout(
+        title='Yearly Remittance Inflows (2015-2024)',
+        xaxis_title='Year',
+        yaxis_title='Amount (USD Billion)',
+        template='plotly_white',
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    fig_remit.write_html("interactive_plots/bd_remittances.html")
+
+    print("Generating Interactive Trade Balance Plot...")
+    # 8. Trade Balance (Exports vs Imports)
+    trade_data = {
+        'Year': [2019, 2020, 2021, 2022, 2023, 2024],
+        'Exports': [40.5, 33.7, 38.8, 52.0, 55.6, 58.0],
+        'Imports': [55.4, 50.7, 60.7, 82.5, 75.1, 72.0]
+    }
+    df_trade = pd.DataFrame(trade_data)
+    
+    fig_trade = go.Figure()
+    fig_trade.add_trace(go.Bar(
+        x=df_trade['Year'], y=df_trade['Exports'],
+        name='Exports', marker_color='#2980b9'
+    ))
+    fig_trade.add_trace(go.Bar(
+        x=df_trade['Year'], y=df_trade['Imports'],
+        name='Imports', marker_color='#c0392b'
+    ))
+    
+    fig_trade.update_layout(
+        title='Trade Balance: Exports vs Imports',
+        xaxis_title='Year',
+        yaxis_title='USD Billion',
+        barmode='group',
+        template='plotly_white',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    fig_trade.write_html("interactive_plots/bd_trade_balance.html")
+
     print("Done generating interactive Bangladesh plots.")
 
 if __name__ == "__main__":
