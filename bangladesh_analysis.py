@@ -164,7 +164,7 @@ def analyze_bangladesh_data():
         fillcolor='rgba(231, 76, 60, 0.1)'
     ))
     
-    # Add annotation for sharp drop
+    # Add annotation for sharp drop (kept from original)
     fig_curr.add_annotation(
         x=2022, y=95,
         xref="x", yref="y",
@@ -182,6 +182,80 @@ def analyze_bangladesh_data():
         hovermode='x unified'
     )
     fig_curr.write_html("interactive_plots/bdt_exchange_rate_trend.html")
+
+    print("Generating Interactive Gold/Silver vs BDT Plot...")
+    # 6. Commodities in BDT (New Request)
+    # Define commodity data in USD (same source as global analysis)
+    comm_data = {
+        'Year': [
+            1972, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 
+            2012, 2014, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025
+        ],
+        'Gold_USD': [
+            58, 160, 615, 317, 383, 384, 279, 444, 1224, 
+            1669, 1266, 1250, 1268, 1392, 1769, 1798, 1800, 1940, 2380, 3380
+        ],
+        'Silver_USD': [
+            1.8, 4.4, 21.0, 6.1, 4.8, 5.2, 4.9, 7.3, 20.2, 
+            31.1, 19.0, 17.1, 15.7, 16.2, 20.5, 25.1, 21.8, 23.4, 28.5, 38.2
+        ]
+    }
+    df_comm = pd.DataFrame(comm_data)
+    
+    # Merge with BDT rates
+    # Note: df_bdt and df_comm have matching Years above for simplicity of this update
+    df_merged = pd.merge(df_comm, df_bdt, on='Year')
+    
+    # Calculate BDT Prices
+    df_merged['Gold_BDT_per_oz'] = df_merged['Gold_USD'] * df_merged['Exchange Rate (BDT/USD)']
+    df_merged['Silver_BDT_per_oz'] = df_merged['Silver_USD'] * df_merged['Exchange Rate (BDT/USD)']
+    
+    # Convert to Bhori (11.66 grams) - Standard unit in BD (1 Troy oz = 31.1035g -> 1 oz = 2.66 Bhori)
+    # Actually, let's keep it simple: Price per Ounce (users can convert) or 
+    # better yet, Price per Bhori is more culturally relevant.
+    # 1 Troy Oz = 31.1035 grams. 1 Bhori = 11.664 grams.
+    # Ratio: 1 Troy Oz = 2.666 Bhori. 
+    # So Price Per Bhori = Price Per Oz / 2.666
+    
+    conversion_factor = 2.666
+    df_merged['Gold_BDT_per_Bhori'] = df_merged['Gold_BDT_per_oz'] / conversion_factor
+    df_merged['Silver_BDT_per_Bhori'] = df_merged['Silver_BDT_per_oz'] / conversion_factor
+
+    fig_bd_comm = make_subplots(specs=[[{"secondary_y": True}]])
+    
+    fig_bd_comm.add_trace(
+        go.Scatter(
+            x=df_merged['Year'], y=df_merged['Gold_BDT_per_Bhori'],
+            name="Gold (BDT/Bhori)",
+            mode='lines',
+            line=dict(color='#FFD700', width=3),
+            fill='tozeroy',
+            fillcolor='rgba(255, 215, 0, 0.1)'
+        ),
+        secondary_y=False
+    )
+    
+    fig_bd_comm.add_trace(
+        go.Scatter(
+            x=df_merged['Year'], y=df_merged['Silver_BDT_per_Bhori'],
+            name="Silver (BDT/Bhori)",
+            mode='lines',
+            line=dict(color='#BDC3C7', width=3), # Silver
+        ),
+        secondary_y=True
+    )
+    
+    fig_bd_comm.update_layout(
+        title='Gold & Silver Prices in Bangladesh (Per Bhori) 1972-2025',
+        template='plotly_white',
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    
+    fig_bd_comm.update_yaxes(title_text="Gold Price (BDT)", color='#b7950b', secondary_y=False)
+    fig_bd_comm.update_yaxes(title_text="Silver Price (BDT)", color='#7f8c8d', secondary_y=True)
+    
+    fig_bd_comm.write_html("interactive_plots/bd_commodities.html")
     
     print("Done generating interactive Bangladesh plots.")
 

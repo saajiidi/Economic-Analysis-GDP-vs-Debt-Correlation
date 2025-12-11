@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial History: Bretton Woods to Fiat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #000000, #434343);
+            color: #ffd700;
+            padding: 5rem 0;
+            margin-bottom: 0;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .chart-container {
+            background: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            margin-bottom: 3rem;
+            border: 1px solid #333;
+            height: 500px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: scale(1.02);
+            border-color: #ffd700;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .story-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #b0b0b0;
+            background: #1e1e1e;
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid #ffd700;
+            margin-bottom: 2rem;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .timeline-marker {
+            text-align: center;
+            padding: 2rem;
+            background: #ffd700;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 3rem auto;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .nav-btn {
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #ffd700;
+            color: black;
+        }
+
+        footer {
+            background: #000;
+            padding: 3rem 0;
+            margin-top: 5rem;
+            border-top: 1px solid #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header text-center animate__animated animate__fadeIn">
+        <div class="container">
+            <h1 class="display-3 fw-bold">The Great Financial Shift</h1>
+            <p class="lead">From Gold to Petrodollars: Tracking the Erosion of Value (1971-2025)</p>
+            <div class="mt-4">
+                <a href="index.html" class="nav-btn">Return to Global Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+
+        <!-- 1. The Nixon Shock -->
+        <div class="row align-items-center mb-5 animate__animated animate__fadeInUp">
+            <div class="col-md-12">
+                <div class="timeline-marker">1971: The Nixon Shock</div>
+                <div class="story-text">
+                    <h3 class="text-white">Breaking the Golden Anchor</h3>
+                    <p>
+                        On August 15, 1971, President Richard Nixon announced that the United States would no longer
+                        convert dollars to gold at a fixed value ($35/oz).
+                        This effectively ended the Bretton Woods system and turned the US Dollar into a fiat currency
+                        backed only by government decree.
+                    </p>
+                    <p>
+                        <strong>The Result?</strong> Unleashed from gold, money printing began to accelerate, and the
+                        definition of "money" changed forever.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. The Explosion of Money (M2 Chart) -->
+        <div class="row align-items-center mb-5 animate__animated animate__fadeInUp">
+            <div class="col-lg-5">
+                <div class="story-text">
+                    <h3 class="text-white">Exponential Money Growth</h3>
+                    <p>
+                        Without a gold constraint, the money supply (M2) began to skyrocket. From under $700 Billion in
+                        1970 to over <strong>$22 Trillion</strong> today.
+                    </p>
+                    <ul class="list-unstyled mt-3">
+                        <li class="mb-2">⚠️ <strong>2008 Crisis:</strong> Quantitative Easing begins.</li>
+                        <li class="mb-2">⚠️ <strong>2020 Pandemic:</strong> 40% of all US Dollars in existence were
+                            printed in just two years.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="chart-container">
+                    <iframe src="interactive_plots/us_m2_supply.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. The Petrodollar System -->
+        <div class="row align-items-center mb-5 animate__animated animate__fadeInUp">
+            <div class="col-md-12">
+                <div class="timeline-marker">1973: The Petrodollar Rise</div>
+                <div class="story-text">
+                    <h3 class="text-white">Oil: The New Backing</h3>
+                    <p>
+                        To maintain demand for the Dollar after decoupling from gold, the US agreed with Saudi Arabia to
+                        price oil exclusively in USD.
+                        This created the "Petrodollar" system: every country needed dollars to buy energy, artificially
+                        propping up the currency's value.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Oil vs Gold Chart -->
+        <div class="row align-items-center mb-5 animate__animated animate__fadeInUp">
+            <div class="col-lg-7">
+                <div class="chart-container">
+                    <iframe src="interactive_plots/oil_vs_gold.html"></iframe>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="story-text">
+                    <h3 class="text-white">Black Gold vs. Real Gold</h3>
+                    <p>
+                        While Oil prices (Blue line) are volatile in dollar terms, notice the Gold price (Yellow line).
+                    </p>
+                    <p>
+                        <strong>The Insight:</strong> Priced in Gold, oil has actually remained relatively stable over
+                        50 years.
+                        The volatility isn't necessarily in the oil; <em>it's in the dollar itself.</em>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Erosion of Purchasing Power -->
+        <div class="row align-items-center mb-5 animate__animated animate__fadeInUp">
+            <div class="col-lg-6">
+                <div class="story-text">
+                    <h3 class="text-white">The Silent Thief: Inflation</h3>
+                    <p>
+                        This chart shows the real purchasing power of $1 from 1970 to today.
+                        A dollar from 1970 is worth roughly <strong>12 cents</strong> today.
+                    </p>
+                    <p>
+                        This is why holding assets (Real Estate, Stocks, Gold, Bitcoin) has been crucial for wealth
+                        preservation compared to saving cash.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <iframe src="interactive_plots/purchasing_power.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusion -->
+        <div class="row text-center mb-5 animate__animated animate__fadeInUp">
+            <div class="col-12">
+                <div class="p-5 rounded-3"
+                    style="background: linear-gradient(45deg, #1e1e1e, #333); border: 1px solid #ffd700;">
+                    <h2 class="section-title">The Takeaway</h2>
+                    <p class="lead text-white">
+                        "In the absence of the gold standard, there is no way to protect savings from confiscation
+                        through inflation." <br>
+                        <span class="fs-6 text-muted">— Alan Greenspan (Pre-Fed Chair)</span>
+                    </p>
+                    <div class="mt-4">
+                        <a href="index.html" class="btn btn-warning btn-lg fw-bold px-5">Back to Main Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="text-center">
+        <div class="container">
+            <p class="text-muted">Financial History Analysis &copy; 2025 | Sources: FRED, Macrotrends, World Bank</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

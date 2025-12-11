@@ -52,10 +52,10 @@ def create_visualizations(df):
         size='Debt-to-GDP Ratio (%)',
         color='Country',
         hover_name='Country',
-        text='Country',
-        size_max=40,  # Reduced max size to prevent heavy overlapping
-        opacity=0.7,   # Added opacity to see overlapping points
-        log_x=True,    # Log scale to spread out clustered economies
+        # text='Country',  # Removed to prevent overlapping. Hover shows details.
+        size_max=40,
+        opacity=0.7,
+        log_x=True,
         log_y=True,
         title='GDP vs Total Debt (Bubble size = Debt Ratio)'
     )
@@ -78,12 +78,24 @@ def create_visualizations(df):
 
     # 5. Debt Categories Pie Chart
     debt_counts = df['Debt Category'].value_counts()
+    
+    # Define logical colors for risk levels
+    color_map = {
+        'Critical (>200%)': '#8b0000', # Dark Red
+        'High (>90%)': '#d32f2f',      # Red
+        'High (60-90%)': '#f57c00',    # Orange
+        'Moderate (30-60%)': '#388e3c' # Green
+    }
+    
     fig_pie = px.pie(
         names=debt_counts.index,
         values=debt_counts.values,
         title='Distribution of Debt Categories',
-        hole=0.3
+        hole=0.4,
+        color=debt_counts.index,
+        color_discrete_map=color_map
     )
+    fig_pie.update_traces(textinfo='percent+label')
     fig_pie.write_html("interactive_plots/debt_categories_pie.html")
     
     # 7. Horizontal Bar Plot (Overview)
@@ -291,11 +303,78 @@ def main():
         print("Analyzing Global Inflation Data...")
         analyze_global_inflation()
         print("Global inflation visualization created.")
+
+        print("Analyzing Global Commodities Data...")
+        analyze_commodities_usd()
+        print("Commodities visualization created.")
         
     except Exception as e:
         print(f"An error occurred: {e}")
         import traceback
         traceback.print_exc()
+
+def analyze_commodities_usd():
+    """Analyze and visualize Gold and Silver prices in USD (1970-2025)."""
+    check_output_dir()
+    
+    # Historical Data Points (Approximate Annual Averages/Year-End)
+    data = {
+        'Year': [
+            1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 
+            2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 
+            2020, 2021, 2022, 2023, 2024, 2025
+        ],
+        'Gold (USD/oz)': [
+            36, 160, 615, 317, 383, 384, 279, 444, 1224, 
+            1571, 1669, 1411, 1266, 1160, 1250, 1257, 1268, 1392, 
+            1769, 1798, 1800, 1940, 2380, 3380
+        ],
+        'Silver (USD/oz)': [
+            1.8, 4.4, 21.0, 6.1, 4.8, 5.2, 4.9, 7.3, 20.2, 
+            35.1, 31.1, 23.8, 19.0, 15.7, 17.1, 17.0, 15.7, 16.2, 
+            20.5, 25.1, 21.8, 23.4, 28.5, 38.2
+        ]
+    }
+    
+    df = pd.DataFrame(data)
+    
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    
+    # Gold Trace
+    fig.add_trace(
+        go.Scatter(
+            x=df['Year'], y=df['Gold (USD/oz)'],
+            name="Gold Price ($)",
+            mode='lines',
+            line=dict(color='#FFD700', width=3), # Gold color
+            fill='tozeroy',
+            fillcolor='rgba(255, 215, 0, 0.1)'
+        ),
+        secondary_y=False
+    )
+    
+    # Silver Trace
+    fig.add_trace(
+        go.Scatter(
+            x=df['Year'], y=df['Silver (USD/oz)'],
+            name="Silver Price ($)",
+            mode='lines',
+            line=dict(color='#C0C0C0', width=3), # Silver color
+        ),
+        secondary_y=True
+    )
+    
+    fig.update_layout(
+        title='Precious Metals Price History (USD) 1970-2025',
+        template='plotly_white',
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    
+    fig.update_yaxes(title_text="Gold Price (USD/oz)", color='#FFD700', secondary_y=False)
+    fig.update_yaxes(title_text="Silver Price (USD/oz)", color='#7f8c8d', secondary_y=True) # Darker grey for text readability
+    
+    fig.write_html("interactive_plots/global_commodities_usd.html")
 
 if __name__ == "__main__":
     main()
